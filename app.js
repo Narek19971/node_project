@@ -1,14 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const config = require("./config");
+const mongoose = require('mongoose');
+const Post = require('./models/post');
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }))
 app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-    res.render('index')
-})
+mongoose.connect(config.MONGO_URL);
 
-app.listen(3000, () => console.log(`server is run in port 3000`));
+Post.create({
+    name: "Narek"
+}).then(post => console.log(post))
 
+app.get('/', (req, res) => res.render('index'));
+
+app.listen(config.PORT, () =>console.log(`Example app listening on port ${config.PORT}!`));
